@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel;
+using System.Data;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace WPF_Task_Planner
 {
@@ -17,9 +19,10 @@ namespace WPF_Task_Planner
         {
             InitializeComponent();
             DataContext = new MainViewModel();
+
         }
 
-        private void ProductsDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
+        private void TasksDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
         {
             e.Handled = true;
 

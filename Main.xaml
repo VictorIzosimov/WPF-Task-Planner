@@ -15,21 +15,39 @@
             <ColumnDefinition Width="431*"/>
             <ColumnDefinition Width="260*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid ItemsSource="{Binding Tasks, NotifyOnTargetUpdated=True}" 
-            Sorting="ProductsDataGrid_Sorting"
-            IsReadOnly="True"
+        <DataGrid x:Name="TasksGrid" ItemsSource="{Binding Tasks, NotifyOnTargetUpdated=True}" 
+            Sorting="TasksDataGrid_Sorting"
+            
                   AutoGenerateColumns="False" CanUserAddRows="False" Margin="0,10,0,672" Grid.ColumnSpan="3">
+            <DataGrid.Resources>
+                <DataTemplate x:Key="ReadonlyCellTemplate">
+                    <TextBlock Text="{Binding Text}" />
+                </DataTemplate>
 
+                <DataTemplate x:Key="EditableCellTemplate">
+                    <TextBox Text="{Binding Text}" />
+                </DataTemplate>
+            </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Id" Binding="{Binding Id}"/>
 
-                <DataGridTextColumn Header="Имя пользователя" Binding="{Binding Username}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Имя пользователя" Binding="{Binding Username}"/>
 
-                <DataGridTextColumn Header="Email" Binding="{Binding Email}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Email" Binding="{Binding Email}"/>
 
-                <DataGridTextColumn Header="Текст задачи" Width="Auto" Binding="{Binding Text}"/>
-
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status}"/>
+                <DataGridTemplateColumn Header="Текст задачи" CellTemplate="{StaticResource ReadonlyCellTemplate}">
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ContentPresenter x:Name="Presenter" Content="{Binding}" ContentTemplate="{StaticResource ReadonlyCellTemplate}" />
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=LogoutButton, Path=IsVisible}" Value="True">
+                                    <Setter TargetName="Presenter" Property="ContentTemplate" Value="{StaticResource EditableCellTemplate}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Статус" Binding="{Binding Status}"/>
 
 
             </DataGrid.Columns>
@@ -92,7 +110,7 @@
         <Label Content="ID" Grid.Column="1" HorizontalAlignment="Left" Margin="409,372,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="58"/>
         <Label Content="Текст задачи" Grid.Column="1" HorizontalAlignment="Left" Margin="409,406,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
         <Label Content="Статус" Grid.Column="1" HorizontalAlignment="Left" Margin="409,448,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Button Visibility="{Binding Path=ShowLogout, Converter={StaticResource Converter}}" Content="Выйти из профиля" Grid.Column="1" HorizontalAlignment="Left" Margin="118,501,0,0" VerticalAlignment="Top" Click="Button_Click_3"/>
+        <Button x:Name="LogoutButton" Visibility="{Binding Path=ShowLogout, Converter={StaticResource Converter}}" Content="Выйти из профиля" Grid.Column="1" HorizontalAlignment="Left" Margin="118,501,0,0" VerticalAlignment="Top" Click="Button_Click_3"/>
         <ComboBox x:Name="StatusEditInput" SelectedValuePath="Tag"  Grid.Column="2" HorizontalAlignment="Left" Margin="74,450,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="Выполнена" Tag="0"/>
             <ComboBoxItem Content="Не выполнена" Tag="1"/>

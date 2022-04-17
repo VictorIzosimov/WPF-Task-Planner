@@ -24,7 +24,7 @@ namespace WPF_Task_Planner
         {
             var totalItems = tasks.Count;
 
-            ObservableCollection<Task> sortedProducts = new ObservableCollection<Task>();
+            ObservableCollection<Task> sortedTasks = new ObservableCollection<Task>();
             var url = $"https://uxcandy.com/~shapoval/test-task-backend/v2/?developer=Victor&sort_field={sortColumn}&sort_direction={sortDir}&page={page}";
             HttpResponseMessage response = await client.GetAsync(url);
 
@@ -45,12 +45,12 @@ namespace WPF_Task_Planner
                         Status = GetEnumDescription((Status)task["status"])
                     };
 
-                    sortedProducts.Add(newTask);
+                    sortedTasks.Add(newTask);
                 }
             }
 
 
-            return new Tuple<int, ObservableCollection<Task>> (totalItems, sortedProducts);
+            return new Tuple<int, ObservableCollection<Task>> (totalItems, sortedTasks);
         }
         private static string GetEnumDescription(Enum value)
         {
